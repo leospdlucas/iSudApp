@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário de Almoço para os Missionários 2025</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+        }
+        .month-container {
+            margin: 20px auto;
+            width: 60%;
+        }
+        h2 {
+            background-color: #007bff;
+            color: white;
+            padding: 10px;
+        }
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        .saturday, .sunday {
+            background-color: #d4edda;
+        }
+        .input-box {
+            margin-top: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+        input {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calendário de Almoço para os Missionários 2025</h1>
+    {% for month, weeks in calendar_data.items() %}
+    <div class="month-container">
+        <h2>{{ month }}</h2>
+        <table>
+            <tr>
+                <th>Dom</th>
+                <th>Seg</th>
+                <th>Ter</th>
+                <th>Qua</th>
+                <th>Qui</th>
+                <th>Sex</th>
+                <th>Sáb</th>
+            </tr>
+            {% for week in weeks %}
+            <tr>
+                {% for day in week %}
+                    {% if day == 0 %}
+                        <td></td>
+                    {% else %}
+                        <td class="{{ 'saturday' if loop.index == 7 else 'sunday' if loop.index == 1 else '' }}">
+                            <div>{{ day }}</div>
+                            {% if loop.index == 1 or loop.index == 7 %}
+                                {% if day|int > 0 %} 
+                                <div class="input-box">
+                                    <input type="text" placeholder="Dupla de Queimados">
+                                    <input type="text" placeholder="Dupla de Queimados 2 - Jardins">
+                                    <input type="text" placeholder="Dupla de Eng. Pedreira">
+                                    <input type="text" placeholder="Dupla de Paracambí">
+                                </div>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endfor %}
+</body>
+</html>
