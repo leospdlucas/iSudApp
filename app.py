@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("calendar.html", calendar_data=generate_calendar())
+    return render_template("index.html", calendar_data=generate_calendar())
 
 def generate_calendar():
     import calendar
