@@ -3,125 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendário de Almoço para os Missionários 2025</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f8f9fa;
-        }
-        .month-container {
-            margin: 20px auto;
-            width: 60%;
-        }
-        h2 {
-            background-color: #007bff;
-            color: white;
-            padding: 10px;
-        }
-        table {
-            margin: 0 auto;
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid #333;
-            padding: 10px;
-            text-align: center;
-            vertical-align: top;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-        .saturday, .sunday {
-            background-color: #d4edda;
-        }
-        .input-box {
-            margin-top: 5px;
-            display: flex;
-            flex-direction: column;
-        }
-        input {
-            margin-bottom: 5px;
-        }
-        button {
-            display: inline-block; /* Garante que o botão seja exibido */
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-    <script>
-       function saveData(month, week, day) {
-    console.log(`Salvando dados para ${month}, Semana ${week}, Dia ${day}`);
-    const inputs = document.querySelectorAll(`.input-box[data-month="${month}"][data-week="${week}"][data-day="${day}"] input`);
-    const data = {
-        month,
-        week,
-        day,
-        mission1: inputs[0]?.value || '',
-        mission2: inputs[1]?.value || '',
-        mission3: inputs[2]?.value || '',
-        mission4: inputs[3]?.value || ''
-    };
-    fetch('/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-    }).then(response => response.json())
-      .then(data => alert('Dados salvos com sucesso!'))
-      .catch(err => alert('Erro ao salvar os dados.'));
-}
-    </script>
+    <title>iSUD - Calendário de Almoço</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-    <h1>Calendário de Almoço para os Missionários 2025</h1>
-    {% for month, weeks in calendar_data.items() %}
-    <div class="month-container">
-        <h2>{{ month }}</h2>
-        <table>
-            <tr>
-                <th>Dom</th>
-                <th>Seg</th>
-                <th>Ter</th>
-                <th>Qua</th>
-                <th>Qui</th>
-                <th>Sex</th>
-                <th>Sáb</th>
-            </tr>
-            {% for week in weeks %}
-            <tr>
-                {% for day in week %}
-                    {% if day == 0 %}
-                        <td></td>
-                    {% else %}
-                        <td class="{{ 'saturday' if loop.index == 7 else 'sunday' if loop.index == 1 else '' }}">
-                            <div>{{ day }}</div>
-                            {% if loop.index == 1 or loop.index == 7 %}
-                                {% if day|int > 0 %} 
-                                <div class="input-box" data-month="{{ month }}" data-week="{{ loop.parentloop.index }}" data-day="{{ day }}">
-                                    <input type="text" placeholder="Dupla de Queimados">
-                                    <input type="text" placeholder="Dupla de Queimados 2 - Jardins">
-                                    <input type="text" placeholder="Dupla de Eng. Pedreira">
-                                    <input type="text" placeholder="Dupla de Paracambí">
-                                    <button onclick="saveData('{{ month }}', '{{ loop.parentloop.index }}', '{{ day }}')">Salvar</button>
-                                </div>
-                                {% endif %}
+    <header>
+        <h1>Calendário de Eventos - 2025</h1>
+    </header>
+
+    <main>
+        {% for month, weeks in calendar_data.items() %}
+        <section class="month">
+        <div class="month-container">
+            <h2>{{ month }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dom</th>
+                        <th>Seg</th>
+                        <th>Ter</th>
+                        <th>Qua</th>
+                        <th>Qui</th>
+                        <th>Sex</th>
+                        <th>Sáb</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for week in weeks %}
+                    <tr>
+                        {% for day in week %}
+                            {% if day == 0 %}
+                                <td></td>
+                            {% else %}
+                                <td class="{{ 'saturday' if loop.index == 7 else 'sunday' if loop.index == 1 else '' }}">
+                                    <div>{{ day }}</div>
+                                    {% if loop.index == 1 or loop.index == 7 %}
+                                        {% if day|int > 0 %} 
+                                        <div class="input-box" data-month="{{ month }}" data-week="{{ loop.parentloop.index }}" data-day="{{ day }}">
+                                            <input type="text" placeholder="Dupla de Queimados">
+                                            <input type="text" placeholder="Dupla de Queimados 2 - Jardins">
+                                            <input type="text" placeholder="Dupla de Eng. Pedreira">
+                                            <input type="text" placeholder="Dupla de Paracambí">
+                                            <button onclick="saveData('{{ month }}', '{{ loop.parentloop.index }}', '{{ day }}')">Salvar</button>
+                                        </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
                             {% endif %}
-                        </td>
-                    {% endif %}
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </table>
-    </div>
-    {% endfor %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 iSUD - Calendário de Almoço</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>
