@@ -19,8 +19,8 @@ def index():
     return render_template('index.html', year=year, months=months)
 
 def create_table():
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
     try:
         # Criação da tabela caso ainda não exista
@@ -36,13 +36,13 @@ def create_table():
             dupla_4 VARCHAR(100)
         );
         """)
-        connection.commit()
+        conn.commit()
         print("Tabela 'calendar_data' criada (se não existia).")
     except Exception as e:
         print(f"Erro ao criar tabela: {e}")
     finally:
         cursor.close()
-        close_db_connection(connection)
+        close_db_connection(conn)
 
 @app.route('/save', methods=['POST'])
 def save_data():
@@ -50,8 +50,8 @@ def save_data():
     Salva os dados recebidos do frontend no banco de dados PostgreSQL.
     """
     data = request.get_json()
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
     try:
         # Query para inserir os dados no banco de dados
@@ -69,14 +69,14 @@ def save_data():
             data['dupla_4']
         )
         cursor.execute(query, values)
-        connection.commit()
+        conn.commit()
         return jsonify({"message": "Dados salvos com sucesso!"}), 200
     except Exception as e:
-        connection.rollback()
+        conn.rollback()
         return jsonify({"error": str(e)}), 500
     finally:
         cursor.close()
-        close_db_connection(connection)
+        close_db_connection(conn)
 
 
 @app.route('/fetch', methods=['GET'])
@@ -84,8 +84,8 @@ def fetch_data():
     """
     Recupera os dados armazenados no banco de dados para exibição no frontend.
     """
-    connection = get_db_connection()
-    cursor = connection.cursor()
+    conn = get_db_connection()
+    cursor = conn.cursor()
 
     try:
         # Query para buscar os dados
@@ -112,7 +112,7 @@ def fetch_data():
         return jsonify({"error": str(e)}), 500
     finally:
         cursor.close()
-        close_db_connection(connection)
+        close_db_connection(conn)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,12 @@
 import psycopg2
+import os
 from psycopg2 import pool
+from psycopg2.pool import SimpleConnectionPool
+
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://dbisudapp_user:1PJYJzhzrw5luUJyDHGho82lVUEnLVib@dpg-cttcvvogph6c738i0n90-a/dbisudapp")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL não foi configurado.")
 
 # Configurações do banco de dados
 DB_SETTINGS = {
@@ -11,23 +18,19 @@ DB_SETTINGS = {
 }
 
 # Criando um pool de conexões
-connection_pool = psycopg2.pool.SimpleConnectionPool(
-    1, 10, **DB_SETTINGS
+connection_pool = SimpleConnectionPool(
+    minconn = 1,
+    maxconn = 10,
+    dsn = DATABASE_URL
 )
 
 def get_db_connection():
-    """
-    Obtém uma conexão do pool.
-    """
-    if connection_pool:
-        return connection_pool.getconn()
 
-def close_db_connection(connection):
-    """
-    Retorna a conexão para o pool.
-    """
-    if connection:
-        connection_pool.putconn(connection)
+    return connection_pool.getconn()
+
+def close_db_connection(conn):
+
+    connection_pool.putconn(conn)
 
 def close_all_connections():
     """
