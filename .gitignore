@@ -1,0 +1,13 @@
+# Ignorar o desktop.ini
+desktop.ini
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar diretórios específicos
+/node_modules/
+/dist/
+
+# Ignorar arquivos temporários
+*.tmp
+*.swp
