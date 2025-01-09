@@ -1,5 +1,6 @@
 # Ignorar o desktop.ini
 desktop.ini
+/static/js/desktop.ini
 
 # Ignorar arquivos de log
 *.log
