@@ -15,48 +15,42 @@
     <main>
         {% for month, weeks in months %}
         <section class="month">
-        <div class="month-container">
-            <h2>{{ month }}</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Dom</th>
-                        <th>Seg</th>
-                        <th>Ter</th>
-                        <th>Qua</th>
-                        <th>Qui</th>
-                        <th>Sex</th>
-                        <th>Sáb</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for week in weeks %}
-                    <tr>
-                        {% for day in week %}
-                            {% if day == 0 %}
-                                <td></td>
-                            {% else %}
-                                <td class="{{ 'saturday' if loop.index == 7 else 'sunday' if loop.index == 1 else '' }}">
-                                    <div>{{ day }}</div>
-                                    {% if loop.index == 1 or loop.index == 7 %}
-                                        {% if day|int > 0 %} 
-                                        <div class="input-box" data-month="{{ month }}" data-week="{{ loop.index }}" data-day="{{ day }}">
-                                            <input type="text" placeholder="Dupla de Queimados">
-                                            <input type="text" placeholder="Dupla de Queimados 2 - Jardins">
-                                            <input type="text" placeholder="Dupla de Eng. Pedreira">
-                                            <input type="text" placeholder="Dupla de Paracambí">
-                                            <button>Salvar</button>
-                                        </div>
-                                        {% endif %}
-                                    {% endif %}
-                                </td>
-                            {% endif %}
+            <div class="month-container">
+                <h2>{{ month }}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dom</th>
+                            <th>Seg</th>
+                            <th>Ter</th>
+                            <th>Qua</th>
+                            <th>Qui</th>
+                            <th>Sex</th>
+                            <th>Sáb</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in weeks %}
+                        <tr>
+                            {% for day_info in week %}
+                            <td>
+                                {% if day_info %}
+                                    <div>{{ day_info.day }}</div>
+                                    <div>
+                                        <input type="text" value="{{ day_info.duplas[0] }}" placeholder="Dupla 1">
+                                        <input type="text" value="{{ day_info.duplas[1] }}" placeholder="Dupla 2">
+                                        <input type="text" value="{{ day_info.duplas[2] }}" placeholder="Dupla 3">
+                                        <input type="text" value="{{ day_info.duplas[3] }}" placeholder="Dupla 4">
+                                    </div>
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
                         {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        </section>
         {% endfor %}
     </main>
 
