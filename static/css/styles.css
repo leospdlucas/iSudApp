@@ -60,3 +60,9 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+.message {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-top: 5px;
+}

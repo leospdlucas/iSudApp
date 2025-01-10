@@ -2,21 +2,34 @@ from flask import Flask, request, jsonify, render_template
 from db_config import get_db_connection, close_db_connection
 from datetime import datetime
 import calendar
+import locale
 import os
 
 app = Flask(__name__)
 
+try:
+    locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
+except locale.Error:
+    print("Erro ao definir locale")
+
 @app.route('/')
 def index():
-    """
-    Renderiza a página inicial com o calendário para o ano de 2025.
-    """
     year = datetime.now().year
     months = []
     for month in range(1, 13):
         month_name = calendar.month_name[month]
         month_calendar = calendar.monthcalendar(year, month)
-        months.append((month_name, month_calendar))
+        annotated_month = []
+        for week in month_calendar:
+            annotated_week = []
+            for day in week:
+                if day == 0:
+                    annotated_week.append({"day": "", "message": ""})
+                else:
+                    day_message = "P-day" if (week.index(day) == 1) else "Almoço oferecido pela Missão" if 2 <= week.index(day) <= 5 else ""
+                    annotated_week.append({"day": day, "message": day_message})
+            annotated_month.append(annotated_week)
+        months.append((month_name, annotated_month))
 
     return render_template('index.html', year=year, months=months)
 

@@ -13,33 +13,34 @@
     </header>
 
     <main>
-        {% for month, weeks in months %}
+        {% for month_name, month_calendar in months %}
         <section class="month">
-        <div class="month-container">
-            <h2>{{ month }}</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Dom</th>
-                        <th>Seg</th>
-                        <th>Ter</th>
-                        <th>Qua</th>
-                        <th>Qui</th>
-                        <th>Sex</th>
-                        <th>Sáb</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for week in weeks %}
-                    <tr>
-                        {% for day in week %}
-                            {% if day == 0 %}
-                                <td></td>
-                            {% else %}
-                                <td class="{{ 'saturday' if loop.index == 7 else 'sunday' if loop.index == 1 else '' }}">
-                                    <div>{{ day }}</div>
-                                    {% if loop.index == 1 or loop.index == 7 %}
-                                        {% if day|int > 0 %} 
+            <div class="month-container">
+                <h2>{{ month_name }}</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dom</th>
+                            <th>Seg</th>
+                            <th>Ter</th>
+                            <th>Qua</th>
+                            <th>Qui</th>
+                            <th>Sex</th>
+                            <th>Sáb</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week in month_calendar %}
+                        <tr>
+                            {% for day in week %}
+                                {% if day.day == "" %}
+                                    <td></td>
+                                {% else %}
+                                    <td>
+                                        <div>({ day.day })</div>
+                                        {% if day.message %}
+                                            <div class="message">{{ day.message }}</div>
+                                        {% endif %}
                                         <div class="input-box" data-month="{{ month }}" data-week="{{ loop.index }}" data-day="{{ day }}">
                                             <input type="text" placeholder="Dupla de Queimados">
                                             <input type="text" placeholder="Dupla de Queimados 2 - Jardins">
@@ -47,16 +48,15 @@
                                             <input type="text" placeholder="Dupla de Paracambí">
                                             <button>Salvar</button>
                                         </div>
-                                        {% endif %}
-                                    {% endif %}
-                                </td>
-                            {% endif %}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
                         {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        </section>
         {% endfor %}
     </main>
 
