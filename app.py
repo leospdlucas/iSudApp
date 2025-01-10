@@ -133,4 +133,4 @@ def fetch_data():
 if __name__ == '__main__':
     create_table()  # Criando a tabela se não existir
     port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=os.getenv('FLASK_DEBUG', False))
+    app.run(host="0.0.0.0", port=port, debug=os.getenv('FLASK_DEBUG', False)== 'True')
