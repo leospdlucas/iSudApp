@@ -14,22 +14,15 @@ except locale.Error:
 
 @app.route('/')
 def index():
+    """
+    Renderiza a página inicial com o calendário para o ano de 2025.
+    """
     year = datetime.now().year
     months = []
     for month in range(1, 13):
         month_name = calendar.month_name[month]
         month_calendar = calendar.monthcalendar(year, month)
-        annotated_month = []
-        for week in month_calendar:
-            annotated_week = []
-            for day in week:
-                if day == 0:
-                    annotated_week.append({"day": "", "message": ""})
-                else:
-                    day_message = "P-day" if (week.index(day) == 1) else "Almoço oferecido pela Missão" if 2 <= week.index(day) <= 5 else ""
-                    annotated_week.append({"day": day, "message": day_message})
-            annotated_month.append(annotated_week)
-        months.append((month_name, annotated_month))
+        months.append((month_name, month_calendar))
 
     return render_template('index.html', year=year, months=months)
 
@@ -133,4 +126,4 @@ def fetch_data():
 if __name__ == '__main__':
     create_table()  # Criando a tabela se não existir
     port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=os.getenv('FLASK_DEBUG', False)== 'True')
+    app.run(host="0.0.0.0", port=port, debug=os.getenv('FLASK_DEBUG', False))
