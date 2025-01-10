@@ -40,7 +40,7 @@
                                     <div>{{ day }}</div>
                                     {% if loop.index == 1 or loop.index == 7 %}
                                         {% if day|int > 0 %} 
-                                        <div class="input-box" data-month="{{ month }}" data-week="{{ loop.parentloop.index }}" data-day="{{ day }}">
+                                        <div class="input-box" data-month="{{ month }}" data-week="{{ loop.index }}" data-day="{{ day }}">
                                             <input type="text" placeholder="Dupla de Queimados">
                                             <input type="text" placeholder="Dupla de Queimados 2 - Jardins">
                                             <input type="text" placeholder="Dupla de Eng. Pedreira">
