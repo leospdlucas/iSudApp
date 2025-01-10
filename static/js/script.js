@@ -1,3 +1,17 @@
+document.addEventListener("DOMContentLoader", function() {
+    const saveButtons = document.getSelectorAll('.input-box button');
+
+    saveButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const month = closest('.input-box').dataset.month;
+            const week = closest('.input-box').dataset.week;
+            const day = closest('.input-box').dataset.day;
+
+            saveData(month, week, day);
+        });
+    });
+});
+
 function saveData(month, week, day) {
     console.log(`Salvando dados para ${month}, Semana ${week}, Dia ${day}`);
     const inputs = document.querySelectorAll(`.input-box[data-month="${month}"][data-week="${week}"][data-day="${day}"] input`);

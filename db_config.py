@@ -1,21 +1,11 @@
 import psycopg2
 import os
-from psycopg2 import pool
 from psycopg2.pool import SimpleConnectionPool
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://dbisudapp_user:1PJYJzhzrw5luUJyDHGho82lVUEnLVib@dpg-cttcvvogph6c738i0n90-a/dbisudapp")
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL não foi configurado.")
-
-# Configurações do banco de dados
-DB_SETTINGS = {
-    'dbname': 'DBISUDAPP',
-    'user': 'ISUDAPP_USER',
-    'password': '25802580',
-    'host': 'localhost',
-    'port': '5432'
-}
 
 # Criando um pool de conexões
 connection_pool = SimpleConnectionPool(

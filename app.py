@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, render_template
 from db_config import get_db_connection, close_db_connection
+from datetime import datetime
 import calendar
 import os
 
@@ -10,7 +11,7 @@ def index():
     """
     Renderiza a página inicial com o calendário para o ano de 2025.
     """
-    year = 2025
+    year = datetime.now().year
     months = []
     for month in range(1, 13):
         month_name = calendar.month_name[month]
@@ -119,4 +120,4 @@ def fetch_data():
 if __name__ == '__main__':
     create_table()  # Criando a tabela se não existir
     port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=port, debug=os.getenv('FLASK_DEBUG', False))

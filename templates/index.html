@@ -13,7 +13,7 @@
     </header>
 
     <main>
-        {% for month, weeks in calendar_data.items() %}
+        {% for month, weeks in months %}
         <section class="month">
         <div class="month-container">
             <h2>{{ month }}</h2>
@@ -45,7 +45,7 @@
                                             <input type="text" placeholder="Dupla de Queimados 2 - Jardins">
                                             <input type="text" placeholder="Dupla de Eng. Pedreira">
                                             <input type="text" placeholder="Dupla de Paracambí">
-                                            <button onclick="saveData('{{ month }}', '{{ loop.parentloop.index }}', '{{ day }}')">Salvar</button>
+                                            <button>Salvar</button>
                                         </div>
                                         {% endif %}
                                     {% endif %}
