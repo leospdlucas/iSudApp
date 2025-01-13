@@ -19,38 +19,10 @@ def index():
     """
     year = datetime.now().year
     months = []
-
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    try:
-        query = "SELECT month, week, day, dupla1, dupla2, dupla3, dupla4 FROM calendar_data"
-        cursor.execute(query)
-        save_data = cursor.fetchall()
-
-        data_dict = {(row[0], row[1], row[2]): row[3:] for row in save_data}
-        for month in range(1, 13):
-            month_name = calendar.month_name[month]
-            month_calendar = calendar.monthcalendar(year, month)
-
-            annotated_weeks = []
-            for week in month_calendar:
-                annotated_days = []
-                for day in week:
-                    if day == 0:
-                        annotated_days.append(None)
-                    else:
-                        # Recuperar os dados salvos, se existirem
-                        key = (month_name, week.index(day) + 1, day)
-                        dupla_data = data_dict.get(key, [""] * 4)
-                        annotated_days.append({"day": day, "duplas": dupla_data})
-                annotated_weeks.append(annotated_days)
-            months.append((month_name, annotated_weeks))
-    except Exception as e:
-        print(f"Erro ao carregar dados: {e}")
-    finally:
-        cursor.close()
-        close_db_connection(conn)
+    for month in range(1, 13):
+        month_name = calendar.month_name[month]
+        month_calendar = calendar.monthcalendar(year, month)
+        months.append((month_name, month_calendar))
 
     return render_template('index.html', year=year, months=months)
 
