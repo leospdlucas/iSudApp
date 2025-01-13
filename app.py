@@ -13,18 +13,31 @@ except locale.Error:
     print("Erro ao definir locale")
 
 @app.route('/')
-def index():
-    """
-    Renderiza a página inicial com o calendário para o ano de 2025.
-    """
-    year = datetime.now().year
-    months = []
-    for month in range(1, 13):
-        month_name = calendar.month_name[month]
-        month_calendar = calendar.monthcalendar(year, month)
-        months.append((month_name, month_calendar))
+def index(year_calendar):
 
-    return render_template('index.html', year=year, months=months)
+    return render_template('index.html', year_calendar)
+
+def generate_calendar():
+    year = datetime.now().year
+    cal = calendar.Calendar(firstweekday=6)  # Começa no domingo
+    months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
+    year_calendar = {}
+    for i, month in enumerate(months, start=1):
+        month_data = []
+        for week in cal.monthdayscalendar(year, i):
+            week_data = []
+            for day_index, day in enumerate(week):
+                if day == 0:  # Dias fora do mês
+                    week_data.append("")
+                elif day_index == 1:  # Segunda-feira
+                    week_data.append(f"{day} - P-Day")
+                elif 2 <= day_index <= 5:  # Terça a Sexta-feira, apenas dias válidos
+                    week_data.append(f"{day} - Missão")
+                elif day_index == 0 or day_index == 6:  # Sábado e Domingo
+                    week_data.append(str(day))
+            month_data.append(week_data)
+        year_calendar[month] = month_data
+    return year_calendar
 
 def create_table():
     conn = get_db_connection()
