@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Carrega os dados salvos e preenche os campos correspondentes
+    // Carrega os dados salvos
     fetch('/fetch')
         .then(response => response.json())
         .then(data => {
             data.forEach(item => {
-                // Seleciona os campos correspondentes com base nos atributos data-*
                 const inputs = document.querySelectorAll(`.input-box[data-month="${item.month}"][data-week="${item.week}"][data-day="${item.day}"] input`);
                 if (inputs.length > 0) {
                     if (item.dupla_1) inputs[0].value = item.dupla_1;
@@ -25,7 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const saveButtons = document.querySelectorAll('.input-box button');
     saveButtons.forEach(button => {
         button.addEventListener('click', function () {
-            // Identifica o campo de entrada associado ao botão
             const parentBox = this.closest('.input-box');
             const input = this.previousElementSibling; // O input associado ao botão
 
@@ -33,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const month = parentBox.dataset.month;
             const week = parentBox.dataset.week;
             const day = parentBox.dataset.day;
+            const field = parentBox.dataset.key; // Campo específico (dupla_1, dupla_2, etc.)
 
             // Solicita senha se o campo já estiver preenchido
             const password = input.disabled ? prompt('Este campo já está preenchido. Insira a senha para alterar:') : null;
@@ -42,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 month,
                 week,
                 day,
+                field, // Campo específico
                 value: input.value, // Valor do input
                 password // Senha para validação
             };

@@ -85,24 +85,21 @@ def save_data():
         cursor.execute(query_check, (data['month'], data['week'], data['day']))
         existing = cursor.fetchone()
 
+        field = data.get('field')  # Campo específico (dupla_1, dupla_2, etc.)
         if existing:
-            return jsonify({"message": "Campo já preenchido, edição não permitida."}), 400
+            existing_value = existing[['dupla_1', 'dupla_2', 'dupla_3', 'dupla_4'].index(field)]
+            if existing_value and data.get('password') != senha_admin:
+                return jsonify({"message": "Campo já preenchido. Alterações não permitidas sem a senha correta."}), 403
 
-        # Query para inserir os dados no banco de dados
-        query = """
-        INSERT INTO calendar_data (month, week, day, dupla_1, dupla_2, dupla_3, dupla_4)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        # Atualiza ou insere o valor do campo específico
+        query_update = f"""
+        INSERT INTO calendar_data (month, week, day, {field})
+        VALUES (%s, %s, %s, %s)
+        ON CONFLICT (month, week, day)
+        DO UPDATE SET {field} = EXCLUDED.{field}
         """
-        values = (
-            data['month'],
-            data['week'],
-            data['day'],
-            data.get('dupla_1', existing[0] if existing else None),
-            data.get('dupla_2', existing[1] if existing else None),
-            data.get('dupla_3', existing[2] if existing else None),
-            data.get('dupla_4', existing[3] if existing else None),
-        )
-        cursor.execute(query, values)
+        values = (data['month'], data['week'], data['day'], data['value'])
+        cursor.execute(query_update, values)
         conn.commit()
         
         return jsonify({"message": "Dados salvos com sucesso!"}), 200
