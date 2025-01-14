@@ -36,7 +36,7 @@
                                     {% if day %}
                                         <div>{{ day }}</div>
                                         {% for dupla in ['dupla_1', 'dupla_2', 'dupla_3', 'dupla_4'] %}
-                                            <div class="input-box" data-month="{{ month }}" data-week="{{ loop.parent.index }}" data-day="{{ day }}" data-key="{{ dupla }}">
+                                            <div class="input-box" data-month="{{ month }}" data-week="{{ loop.index }}" data-day="{{ day }}" data-key="{{ dupla }}">
                                                 <input type="text" placeholder="Insira o nome">
                                                 <button>Salvar</button>
                                             </div>
