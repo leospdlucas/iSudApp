@@ -68,12 +68,20 @@ def save_data():
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
-        query_update = """
-        INSERT INTO calendar_data (month, week, day, {field})
-        VALUES (%s, %s, %s, %s)
+        # Query para inserir os dados no banco de dados
+        query = """
+        INSERT INTO calendar_data (month, week, day, dupla_1, dupla_2, dupla_3, dupla_4)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        query = query_update.format(field=data['field'])
-        values = (data['month'], data['week'], data['day'], data['value'])
+        values = (
+            data['month'],
+            data['week'],
+            data['day'],
+            data['dupla_1'],
+            data['dupla_2'],
+            data['dupla_3'],
+            data['dupla_4'],
+        )
         cursor.execute(query, values)
         conn.commit()
         return jsonify({"message": "Dados salvos com sucesso!"}), 200
