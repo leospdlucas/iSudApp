@@ -54,7 +54,8 @@ def create_table():
             dupla_1 VARCHAR(100),
             dupla_2 VARCHAR(100),
             dupla_3 VARCHAR(100),
-            dupla_4 VARCHAR(100)
+            dupla_4 VARCHAR(100),
+            UNIQUE (month, week, day)
         );
         """)
         conn.commit()
