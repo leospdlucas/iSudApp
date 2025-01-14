@@ -26,31 +26,29 @@ document.addEventListener("DOMContentLoaded", function () {
             const week = parentBox.dataset.week;
             const day = parentBox.dataset.day;
 
-            const inputs = parentBox.querySelectorAll('input');
+            const input = parentBox.querySelectorAll('input');
             const data = {
                 month,
                 week,
                 day,
-                dupla_1: inputs[0]?.value || '',
-                dupla_2: inputs[1]?.value || '',
-                dupla_3: inputs[2]?.value || '',
-                dupla_4: inputs[3]?.value || ''
+                [key]: input.value
+                
             };
 
             fetch('/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
-            }).then(response => response.json())
-              .then(result => {
-                  if (result.message) {
-                      alert(result.message);
-                      inputs.forEach(input => {
-                          if (input.value) input.disabled = true; // Bloqueia após salvar
-                      });
-                  }
-              })
-              .catch(err => console.error('Erro ao salvar dados:', err));
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.message) {
+                    alert(result.message);
+                    input.disabled = true;
+                    this.disabled = false;
+                };
+            })
+            .catch(err => console.error('Erro ao salvar dados:', err));
         });
     });
 });
