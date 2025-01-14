@@ -65,40 +65,51 @@ def create_table():
 def save_data():
     """
     Salva os dados recebidos do frontend no banco de dados PostgreSQL.
-    Verifica se o campo já foi preenchido antes de salvar.
+    Verifica se o campo já foi preenchido antes de salvar e valida uma senha se necessário.
     """
     data = request.get_json()
+    senha_admin = os.getenv('ADMIN_PASSWORD', 'minhasenha')  # Define a senha padrão
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
     try:
-        # Verifica se o registro já existe e não está vazio
+        # Verifica se o registro já existe
         query_check = """
-        SELECT * FROM calendar_data
+        SELECT dupla_1, dupla_2, dupla_3, dupla_4 FROM calendar_data
         WHERE month = %s AND week = %s AND day = %s
         """
         cursor.execute(query_check, (data['month'], data['week'], data['day']))
         existing = cursor.fetchone()
 
         if existing:
-            return jsonify({"message": "Campo já preenchido, edição não permitida."}), 400
+            # Verifica se há campos já preenchidos e exige a senha para alterá-los
+            if any(existing) and data.get('password') != senha_admin:
+                return jsonify({"message": "Campo já preenchido. Alterações não permitidas sem a senha correta."}), 403
 
-        # Query para inserir os dados no banco de dados
+        # Atualiza ou insere os dados
         query = """
         INSERT INTO calendar_data (month, week, day, dupla_1, dupla_2, dupla_3, dupla_4)
         VALUES (%s, %s, %s, %s, %s, %s, %s)
+        ON CONFLICT (month, week, day)
+        DO UPDATE SET
+            dupla_1 = EXCLUDED.dupla_1,
+            dupla_2 = EXCLUDED.dupla_2,
+            dupla_3 = EXCLUDED.dupla_3,
+            dupla_4 = EXCLUDED.dupla_4
         """
         values = (
             data['month'],
             data['week'],
             data['day'],
-            data['dupla_1'],
-            data['dupla_2'],
-            data['dupla_3'],
-            data['dupla_4']
+            data.get('dupla_1', existing[0] if existing else None),
+            data.get('dupla_2', existing[1] if existing else None),
+            data.get('dupla_3', existing[2] if existing else None),
+            data.get('dupla_4', existing[3] if existing else None),
         )
         cursor.execute(query, values)
         conn.commit()
+
         return jsonify({"message": "Dados salvos com sucesso!"}), 200
     except Exception as e:
         conn.rollback()
