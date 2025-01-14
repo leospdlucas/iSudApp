@@ -71,8 +71,6 @@ def save_data():
         query_update = """
         INSERT INTO calendar_data (month, week, day, {field})
         VALUES (%s, %s, %s, %s)
-        ON CONFLICT (month, week, day)
-        DO UPDATE SET {field} = EXCLUDED.{field}
         """
         query = query_update.format(field=data['field'])
         values = (data['month'], data['week'], data['day'], data['value'])
