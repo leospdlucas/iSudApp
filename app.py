@@ -15,7 +15,7 @@ except locale.Error:
 @app.route('/')
 def index():
     year_calendar = generate_calendar()
-    return render_template('index.html', months = year_calendar.itens())
+    return render_template('index.html', months = year_calendar.items())
 
 def generate_calendar():
     year = datetime.now().year
