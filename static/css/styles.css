@@ -46,9 +46,7 @@ th {
 .input-box {
     margin-top: 5px;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 }
 
 input {
