@@ -41,11 +41,22 @@
                                     {% if loop.index == 1 or loop.index == 7 %}
                                         {% if day|int > 0 %} 
                                         <div class="input-box" data-month="{{ month }}" data-week="{{ loop.index }}" data-day="{{ day }}">
-                                            <input type="text" placeholder="Dupla de Queimados">
-                                            <input type="text" placeholder="Dupla de Queimados 2 - Jardins">
-                                            <input type="text" placeholder="Dupla de Eng. Pedreira">
-                                            <input type="text" placeholder="Dupla de Paracambí">
-                                            <button>Salvar</button>
+                                            <div>
+                                                <input type="text" placeholder="Dupla de Queimados">
+                                                <button>Salvar</button>
+                                            </div>
+                                            <div>
+                                                <input type="text" placeholder="Dupla de Queimados 2 - Jardins">
+                                                <button>Salvar</button>
+                                            </div>
+                                            <div>
+                                                <input type="text" placeholder="Dupla de Eng. Pedreira">
+                                                <button>Salvar</button>
+                                            </div>
+                                            <div>
+                                                <input type="text" placeholder="Dupla de Paracambí">
+                                                <button>Salvar</button>
+                                            </div>
                                         </div>
                                         {% endif %}
                                     {% endif %}
