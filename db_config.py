@@ -2,7 +2,7 @@ import psycopg2
 import os
 from psycopg2.pool import SimpleConnectionPool
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://dbisudapp_user:1PJYJzhzrw5luUJyDHGho82lVUEnLVib@dpg-cttcvvogph6c738i0n90-a/dbisudapp")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://adm_leo:6m3Z428RS0x7mfZHw7CIHr2Ih6P8pdFN@dpg-cu3a4i8gph6c73bpl2c0-a/db_isudapp")
 
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL não foi configurado.")
