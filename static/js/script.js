@@ -4,18 +4,18 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             data.forEach(item => {
-                const inputs = document.querySelectorAll(`.input-box[data-month="${item.month}"][data-week="${item.week}"][data-day="${item.day}"] input`);
-                if (inputs.length > 0) {
-                    if (item.dupla_1) inputs[0].value = item.dupla_1;
-                    if (item.dupla_2) inputs[1].value = item.dupla_2;
-                    if (item.dupla_3) inputs[2].value = item.dupla_3;
-                    if (item.dupla_4) inputs[3].value = item.dupla_4;
+                const inputs = document.querySelectorAll(`.input-box[data-month="${item.month}"][data-week="${item.week}"][data-day="${item.day}"]`);
+                inputs.forEach((box, index) => {
+                    const input = box.querySelector("input");
+                    const fieldKey = `dupla_${index + 1}`; // Define o campo correspondente
 
-                    // Desabilita campos preenchidos
-                    inputs.forEach(input => {
-                        if (input.value) input.disabled = true;
-                    });
-                }
+                    if (item[fieldKey]) {
+                        input.value = item[fieldKey]; // Preenche o valor
+                        input.disabled = true; // Desabilita o campo
+                        const button = box.querySelector("button");
+                        button.disabled = true; // Desabilita o botão
+                    }
+                });
             });
         })
         .catch(err => console.error('Erro ao buscar dados:', err));
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     saveButtons.forEach(button => {
         button.addEventListener('click', function () {
             const parentBox = this.closest('.input-box');
-            const input = this.previousElementSibling; // O input associado ao botão
+            const input = parentBox.querySelector("input");
 
             // Verifica os atributos data-* para enviar ao backend
             const month = parentBox.dataset.month;
