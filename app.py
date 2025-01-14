@@ -13,9 +13,9 @@ except locale.Error:
     print("Erro ao definir locale")
 
 @app.route('/')
-def index(year_calendar):
-
-    return render_template('index.html', year_calendar)
+def index():
+    year_calendar = generate_calendar()
+    return render_template('index.html', months = year_calendar)
 
 def generate_calendar():
     year = datetime.now().year
@@ -75,6 +75,17 @@ def save_data():
     cursor = conn.cursor()
 
     try:
+         # Verifica se o registro já existe e não está vazio
+        query_check = """
+        SELECT * FROM calendar_data
+        WHERE month = %s AND week = %s AND day = %s
+        """
+        cursor.execute(query_check, (data['month'], data['week'], data['day']))
+        existing = cursor.fetchone()
+
+        if existing:
+            return jsonify({"message": "Campo já preenchido, edição não permitida."}), 400
+
         # Query para inserir os dados no banco de dados
         query = """
         INSERT INTO calendar_data (month, week, day, dupla_1, dupla_2, dupla_3, dupla_4)
@@ -110,7 +121,7 @@ def fetch_data():
 
     try:
         # Query para buscar os dados
-        query = "SELECT * FROM calendar_data"
+        query = "SELECT month, week, day, dupla_1, dupla_2, dupla_3, dupla_4 FROM calendar_data"
         cursor.execute(query)
         rows = cursor.fetchall()
 
