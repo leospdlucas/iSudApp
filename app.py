@@ -63,11 +63,26 @@ def create_table():
 
 @app.route('/save', methods=['POST'])
 def save_data():
+    """
+    Salva os dados recebidos do frontend no banco de dados PostgreSQL.
+    Verifica se o campo já foi preenchido antes de salvar.
+    """
     data = request.get_json()
-
     conn = get_db_connection()
     cursor = conn.cursor()
+
     try:
+        # Verifica se o registro já existe e não está vazio
+        query_check = """
+        SELECT * FROM calendar_data
+        WHERE month = %s AND week = %s AND day = %s
+        """
+        cursor.execute(query_check, (data['month'], data['week'], data['day']))
+        existing = cursor.fetchone()
+
+        if existing:
+            return jsonify({"message": "Campo já preenchido, edição não permitida."}), 400
+
         # Query para inserir os dados no banco de dados
         query = """
         INSERT INTO calendar_data (month, week, day, dupla_1, dupla_2, dupla_3, dupla_4)
@@ -80,7 +95,7 @@ def save_data():
             data['dupla_1'],
             data['dupla_2'],
             data['dupla_3'],
-            data['dupla_4'],
+            data['dupla_4']
         )
         cursor.execute(query, values)
         conn.commit()
@@ -94,11 +109,19 @@ def save_data():
 
 @app.route('/fetch', methods=['GET'])
 def fetch_data():
+    """
+    Recupera os dados armazenados no banco de dados para exibição no frontend.
+    """
     conn = get_db_connection()
     cursor = conn.cursor()
+
     try:
-        cursor.execute("SELECT month, week, day, dupla_1, dupla_2, dupla_3, dupla_4 FROM calendar_data")
+        # Query para buscar os dados
+        query = "SELECT month, week, day, dupla_1, dupla_2, dupla_3, dupla_4 FROM calendar_data"
+        cursor.execute(query)
         rows = cursor.fetchall()
+
+        # Convertendo os dados para JSON
         data = [
             {
                 "month": row[0],
@@ -111,6 +134,7 @@ def fetch_data():
             }
             for row in rows
         ]
+
         return jsonify(data), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
