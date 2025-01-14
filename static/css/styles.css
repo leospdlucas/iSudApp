@@ -46,26 +46,25 @@ th {
 .input-box {
     margin-top: 5px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 input {
-    margin-bottom: 5px;
-    padding: 8px;
-    width: 100%;
-    box-sizing: border-box;
+    margin-bottom: 0;
+    padding: 5px;
+    width: 70%;
 }
 
 button {
-    display: inline-block;
-    padding: 10px 15px;
+    padding: 5px 10px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
-    width: 100%;
-    box-sizing: border-box;
+    margin-left: 5px;
 }
 
 button:hover {
