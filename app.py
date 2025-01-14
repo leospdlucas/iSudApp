@@ -51,11 +51,9 @@ def create_table():
             month VARCHAR(20),
             week INT,
             day INT,
-            dupla_1 VARCHAR(100),
-            dupla_2 VARCHAR(100),
-            dupla_3 VARCHAR(100),
-            dupla_4 VARCHAR(100),
-            UNIQUE (month, week, day)
+            field VARCHAR(20),
+            value VARCHAR(100),
+            UNIQUE (month, week, day, field)
         );
         """)
         conn.commit()
@@ -80,31 +78,30 @@ def save_data():
     try:
         # Verifica se o campo específico foi enviado
         field = data.get('field')
-        if field not in ['dupla_1', 'dupla_2', 'dupla_3', 'dupla_4']:
+        if not field:
             return jsonify({"error": "Campo inválido ou ausente."}), 400
 
-        # Verifica se já existe um registro para o mês, semana e dia
+        # Verifica se já existe um registro para o mês, semana, dia e campo
         query_check = """
-        SELECT dupla_1, dupla_2, dupla_3, dupla_4 FROM calendar_data
-        WHERE month = %s AND week = %s AND day = %s
+        SELECT value FROM calendar_data
+        WHERE month = %s AND week = %s AND day = %s AND field = %s
         """
-        cursor.execute(query_check, (data['month'], data['week'], data['day']))
+        cursor.execute(query_check, (data['month'], data['week'], data['day'], field))
         existing = cursor.fetchone()
 
         # Verifica se o campo específico já está preenchido
         if existing:
-            existing_value = existing[['dupla_1', 'dupla_2', 'dupla_3', 'dupla_4'].index(field)]
-            if existing_value and data.get('password') != senha_admin:
+            if existing[0] and data.get('password') != senha_admin:
                 return jsonify({"message": "Campo já preenchido. Alterações não permitidas sem a senha correta."}), 403
 
         # Atualiza ou insere o valor do campo específico
-        query_update = f"""
-        INSERT INTO calendar_data (month, week, day, {field})
-        VALUES (%s, %s, %s, %s)
-        ON CONFLICT (month, week, day)
-        DO UPDATE SET {field} = EXCLUDED.{field}
+        query_update = """
+        INSERT INTO calendar_data (month, week, day, field, value)
+        VALUES (%s, %s, %s, %s, %s)
+        ON CONFLICT (month, week, day, field)
+        DO UPDATE SET value = EXCLUDED.value
         """
-        values = (data['month'], data['week'], data['day'], data['value'])
+        values = (data['month'], data['week'], data['day'], field, data['value'])
         cursor.execute(query_update, values)
         conn.commit()
 
@@ -115,7 +112,6 @@ def save_data():
     finally:
         cursor.close()
         close_db_connection(conn)
-
 
 @app.route('/fetch', methods=['GET'])
 def fetch_data():
