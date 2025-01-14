@@ -71,6 +71,8 @@ def save_data():
     Salva os dados recebidos do frontend no banco de dados PostgreSQL.
     """
     data = request.get_json()
+    senha_admin = os.getenv('ADMIN_PASSWORD', 'minhasenha')
+
     conn = get_db_connection()
     cursor = conn.cursor()
 
@@ -95,13 +97,14 @@ def save_data():
             data['month'],
             data['week'],
             data['day'],
-            data['dupla_1'],
-            data['dupla_2'],
-            data['dupla_3'],
-            data['dupla_4']
+            data.get('dupla_1', existing[0] if existing else None),
+            data.get('dupla_2', existing[1] if existing else None),
+            data.get('dupla_3', existing[2] if existing else None),
+            data.get('dupla_4', existing[3] if existing else None),
         )
         cursor.execute(query, values)
         conn.commit()
+        
         return jsonify({"message": "Dados salvos com sucesso!"}), 200
     except Exception as e:
         conn.rollback()
