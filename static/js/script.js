@@ -33,6 +33,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const day = parentBox.dataset.day;
             const field = parentBox.dataset.key; // Campo específico (dupla_1, dupla_2, etc.)
 
+            if (!field) {
+                alert('Erro: Campo não identificado.');
+                return;
+            }
+
             // Solicita senha se o campo já estiver preenchido
             const password = input.disabled ? prompt('Este campo já está preenchido. Insira a senha para alterar:') : null;
 

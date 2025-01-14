@@ -77,15 +77,20 @@ def save_data():
     cursor = conn.cursor()
 
     try:
-         # Verifica se o registro já existe e não está vazio
+        # Verifica se o campo específico foi enviado
+        field = data.get('field')
+        if field not in ['dupla_1', 'dupla_2', 'dupla_3', 'dupla_4']:
+            return jsonify({"error": "Campo inválido ou ausente."}), 400
+
+        # Verifica se já existe um registro para o mês, semana e dia
         query_check = """
-        SELECT * FROM calendar_data
+        SELECT dupla_1, dupla_2, dupla_3, dupla_4 FROM calendar_data
         WHERE month = %s AND week = %s AND day = %s
         """
         cursor.execute(query_check, (data['month'], data['week'], data['day']))
         existing = cursor.fetchone()
 
-        field = data.get('field')  # Campo específico (dupla_1, dupla_2, etc.)
+        # Verifica se o campo específico já está preenchido
         if existing:
             existing_value = existing[['dupla_1', 'dupla_2', 'dupla_3', 'dupla_4'].index(field)]
             if existing_value and data.get('password') != senha_admin:
@@ -101,7 +106,7 @@ def save_data():
         values = (data['month'], data['week'], data['day'], data['value'])
         cursor.execute(query_update, values)
         conn.commit()
-        
+
         return jsonify({"message": "Dados salvos com sucesso!"}), 200
     except Exception as e:
         conn.rollback()
