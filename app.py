@@ -29,8 +29,8 @@ def generate_calendar():
             for day_index, day in enumerate(week):
                 if day == 0:
                     week_data.append("")
-                elif day == 1:
-                    week_data.append(" - P-Day ")
+                elif day_index == 1: # Segunda
+                    week_data.append(f"{day} - P-Day ")
                 elif day_index in [0, 6]:  # Sábado e Domingo
                     week_data.append(str(day))
                 else:
