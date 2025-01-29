@@ -44,10 +44,6 @@ def create_table():
     cursor = conn.cursor()
     try:
         cursor.execute("""
-        DROP TABLE IF EXISTS calendar_data;
-        """)
-
-        cursor.execute("""
         CREATE TABLE IF NOT EXISTS calendar_data (
             id SERIAL PRIMARY KEY,
             month VARCHAR(20),
