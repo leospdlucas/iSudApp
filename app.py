@@ -30,7 +30,7 @@ def generate_calendar():
                 if day == 0:
                     week_data.append("")
                 elif day_index == 1: # Segunda
-                    week_data.append(f"{day} - P-Day ")
+                    week_data.append(f"{day} - P_Day ")
                 elif day_index in [0, 6]:  # Sábado e Domingo
                     week_data.append(str(day))
                 else:
