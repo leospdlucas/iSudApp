@@ -6,6 +6,12 @@ body {
     padding: 0;
 }
 
+header h1 {
+    color: #007bff;
+    padding: 15px;
+    font-size: 28px;
+}
+
 .month-container {
     margin: 20px auto;
     width: 80%;
@@ -22,7 +28,6 @@ table {
     margin: 20px auto;
     border-collapse: collapse;
     width: 100%;
-    max-width: 100%;
     table-layout: auto;
 }
 
@@ -43,28 +48,37 @@ th {
     background-color: #d4edda;
 }
 
+/* Estilo das caixas de entrada */
 .input-box {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    margin-top: 8px;
+    display: block;
 }
 
 input {
     flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
 }
 
 button {
-    padding: 5px 10px;
+    padding: 8px 12px;
     background-color: #007bff;
     color: white;
     border: none;
-    border-radius: 3px;
+    border-radius: 4px;
     cursor: pointer;
+    margin-top: 8px;
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #d6d6d6;
+    cursor: not-allowed;
 }
 
 .message {
@@ -73,14 +87,9 @@ button:hover {
     margin-top: 5px;
 }
 
-/* Responsividade para telas menores */
+/* Responsividade */
 @media (max-width: 768px) {
-    .month-container {
-        width: 90%;
-    }
-
     table {
-        width: 100%;
         font-size: 14px;
     }
 
@@ -99,11 +108,19 @@ button:hover {
     }
 
     table {
-        font-size: 12px;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    th, td {
+        display: inline-block;
+        width: 100%;
     }
 
     input, button {
         padding: 12px;
+        width: 100%;
     }
 
     .input-box {
