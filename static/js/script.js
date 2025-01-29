@@ -4,37 +4,64 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             data.forEach(item => {
-                // Busca o campo específico para cada dupla
-                const input = document.querySelector(`.input-box[data-month="${item.month}"][data-week="${item.week}"][data-day="${item.day}"][data-key="${item.key}"] input`);
+                const input = document.querySelector(`.input-box[data-month="${item.month}"][data-week="${item.week}"][data-day="${item.day}"] input`);
                 if (input) {
                     input.value = item.value || '';
-                    if (input.value) {
-                        input.disabled = true; // Bloqueia campos preenchidos
-                    }
                 }
             });
         })
         .catch(err => console.error('Erro ao buscar dados:', err));
 
-    // Configura os eventos de clique para inputs bloqueados
-    document.querySelectorAll('.input-box input').forEach(input => {
-        input.addEventListener('click', function () {
-            if (this.disabled) {
-                const wantsToEdit = confirm("Este campo já está preenchido. Deseja alterar?");
-                if (wantsToEdit) {
-                    const password = prompt("Insira a senha ADM para desbloquear:");
-                    if (password === "senha_adm") { // Substitua pela sua senha correta
-                        this.disabled = false;
-                        this.focus();
-                    } else {
-                        alert("Senha incorreta. A alteração não foi permitida.");
-                    }
+    // Configura eventos de alteração nos campos de input
+    const inputs = document.querySelectorAll('.input-box input');
+    inputs.forEach(input => {
+        input.addEventListener('blur', function () {
+            const parentBox = this.closest('.input-box');
+            const month = parentBox.dataset.month;
+            const week = parentBox.dataset.week;
+            const day = parentBox.dataset.day;
+            const newValue = this.value.trim();
+
+            // Detecta se houve alteração no valor
+            if (newValue !== this.dataset.previousValue) {
+                const confirmEdit = confirm('Deseja alterar o valor deste campo?');
+                if (confirmEdit) {
+                    const password = prompt('Insira a senha de administrador para confirmar:');
+                    if (!password) return;
+
+                    const data = {
+                        month,
+                        week,
+                        day,
+                        value: newValue,
+                        password
+                    };
+
+                    // Envia a atualização para o backend
+                    fetch('/save', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.message) {
+                            alert(result.message);
+                            this.dataset.previousValue = newValue; // Atualiza o valor salvo localmente
+                        } else if (result.error) {
+                            alert(`Erro: ${result.error}`);
+                        }
+                    })
+                    .catch(err => console.error('Erro ao salvar dados:', err));
                 }
             }
         });
+
+        // Salva o valor inicial como referência
+        input.dataset.previousValue = input.value.trim();
     });
 
-    // Configura os botões de salvar para cada input-box
+    // Configura os botões de salvar
     const saveButtons = document.querySelectorAll('.input-box button');
     saveButtons.forEach(button => {
         button.addEventListener('click', function () {
@@ -42,20 +69,19 @@ document.addEventListener("DOMContentLoaded", function () {
             const month = parentBox.dataset.month;
             const week = parentBox.dataset.week;
             const day = parentBox.dataset.day;
-            const key = parentBox.dataset.key;
             const input = parentBox.querySelector('input');
+            const value = input.value.trim();
+
+            // Feedback visual durante a requisição
+            button.disabled = true;
+            button.textContent = "Salvando...";
 
             const data = {
                 month,
                 week,
                 day,
-                key,
-                value: input.value.trim(), // Limpa espaços desnecessários
+                value
             };
-
-            // Feedback visual durante a requisição
-            button.disabled = true;
-            button.textContent = "Salvando...";
 
             // Envia os dados para o backend
             fetch('/save', {
@@ -67,7 +93,6 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(result => {
                 if (result.message) {
                     alert(result.message);
-                    input.disabled = true; // Bloqueia o campo após salvar
                 } else if (result.error) {
                     alert(`Erro: ${result.error}`);
                 }
