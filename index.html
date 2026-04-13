@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a237e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>iSUD - Apoio Missionário</title>
+<style>
+/* ===== CSS RESET & VARIABLES ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #1a237e;
+  --primary-light: #3949ab;
+  --accent: #f9a825;
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --text: #212121;
+  --text-secondary: #757575;
+  --success: #2e7d32;
+  --danger: #c62828;
+  --border: #e0e0e0;
+  --weekend: #e8f5e9;
+  --radius: 8px;
+  --radius-sm: 4px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-lg: 0 4px 12px rgba(0,0,0,0.15);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Area colors */
+  --area-0: #1565c0;
+  --area-1: #2e7d32;
+  --area-2: #e65100;
+  --area-3: #6a1b9a;
+  --area-4: #00838f;
+  --area-5: #ad1457;
+}
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-tap-highlight-color: transparent;
+}
+button { cursor: pointer; font-family: var(--font); }
+input, select, textarea { font-family: var(--font); font-size: 14px; }
+
+/* ===== LAYOUT SHELL ===== */
+.app-header {
+  background: var(--primary);
+  color: white;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+.app-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.header-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+.header-btn:hover { background: rgba(255,255,255,0.15); }
+.header-btn.active { background: rgba(255,255,255,0.25); }
+
+/* ===== TAB NAVIGATION ===== */
+.tab-nav {
+  display: flex;
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tab-nav::-webkit-scrollbar { display: none; }
+.tab-btn {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 8px;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+.tab-btn:hover { color: var(--primary-light); }
+
+/* ===== MAIN CONTENT ===== */
+.app-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px;
+  min-height: calc(100vh - 110px);
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-light); }
+.btn-accent { background: var(--accent); color: #333; }
+.btn-accent:hover { opacity: 0.9; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { opacity: 0.9; }
+.btn-outline {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.btn-outline:hover { background: var(--bg); }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-block { width: 100%; justify-content: center; }
+
+/* ===== FAB ===== */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #333;
+  border: none;
+  font-size: 28px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  transition: transform 0.2s;
+}
+.fab:hover { transform: scale(1.1); }
+
+/* ===== FORMS ===== */
+.form-group { margin-bottom: 12px; }
+.form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(26,35,126,0.15);
+}
+textarea.form-control { resize: vertical; min-height: 60px; }
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 16px;
+  animation: fadeIn 0.2s;
+}
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.2s;
+}
+.modal-header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h3 { font-size: 16px; }
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--text-secondary);
+  padding: 4px;
+}
+.modal-body { padding: 16px; }
+.modal-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* ===== TOOLBAR ===== */
+.toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.toolbar select {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: white;
+}
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.segmented button {
+  padding: 6px 14px;
+  border: none;
+  background: white;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-right: 1px solid var(--border);
+}
+.segmented button:last-child { border-right: none; }
+.segmented button.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* ===== CALENDAR MODULE ===== */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.month-nav h2 { font-size: 18px; min-width: 180px; text-align: center; }
+.month-nav button {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 18px;
+  color: var(--text);
+}
+.weekend-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.weekend-card-header {
+  padding: 10px 16px;
+  font-weight: 600;
+  font-size: 14px;
+  color: white;
+  background: var(--primary);
+}
+.weekend-card-header.sabado { background: var(--primary-light); }
+.weekend-card-header.domingo { background: var(--primary); }
+.weekend-card-body { padding: 12px 16px; }
+.dupla-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--bg);
+}
+.dupla-row:last-child { border-bottom: none; }
+.dupla-label {
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 100px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
+}
+.dupla-select {
+  flex: 1;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  background: white;
+}
+
+/* ===== VOLUNTARIOS LIST ===== */
+.vol-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.vol-info h4 { font-size: 14px; margin-bottom: 2px; }
+.vol-info p { font-size: 12px; color: var(--text-secondary); }
+.vol-tags { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+.tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.tag.active-tag { background: #e3f2fd; color: var(--area-0); }
+
+/* ===== DISPONIBILIDADE MODULE ===== */
+.avail-grid {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.avail-grid table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.avail-grid th, .avail-grid td {
+  padding: 6px 4px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.avail-grid th {
+  background: var(--primary);
+  color: white;
+  font-weight: 500;
+  font-size: 11px;
+}
+.avail-grid td.type-label {
+  font-weight: 600;
+  font-size: 10px;
+  text-transform: uppercase;
+  background: var(--bg);
+  width: 70px;
+  text-align: left;
+  padding-left: 6px;
+}
+.avail-grid .cb {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--primary);
+}
+.avail-member-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+.avail-member-header {
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg);
+  cursor: pointer;
+}
+.avail-member-header h4 { font-size: 14px; }
+.avail-member-body { padding: 8px; }
+
+/* ===== RETENCAO MODULE ===== */
+.retencao-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.retencao-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.retencao-table th, .retencao-table td {
+  padding: 6px 4px;
+  text-align: center;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+.retencao-table th {
+  background: var(--primary);
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+}
+.retencao-table th.group-header {
+  background: var(--primary-light);
+  font-size: 11px;
+}
+.retencao-table td:first-child {
+  text-align: left;
+  font-weight: 500;
+  white-space: normal;
+  min-width: 120px;
+}
+.retencao-table .cb {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--success);
+}
+.progress-bar {
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+.retencao-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px 16px;
+  margin-bottom: 8px;
+}
+.retencao-card h4 { font-size: 14px; margin-bottom: 4px; }
+.retencao-card .section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 8px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.marco-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 0;
+  font-size: 13px;
+}
+.marco-item.done { color: var(--success); }
+.marco-item.done span { text-decoration: line-through; opacity: 0.8; }
+
+/* ===== CONFIG MODULE ===== */
+.config-area-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  background: var(--surface);
+}
+.config-area-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.config-area-name { flex: 1; font-weight: 500; }
+.config-area-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: var(--border);
+  color: var(--text-secondary);
+}
+.config-area-badge.ativa { background: #e8f5e9; color: var(--success); }
+
+/* ===== SEARCH BOX ===== */
+.search-box {
+  position: relative;
+  margin-bottom: 12px;
+}
+.search-box input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+.search-box::before {
+  content: '🔍';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-state h3 { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+.empty-state p { font-size: 13px; }
+
+/* ===== CHIPS (day tags) ===== */
+.chip-group { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: white;
+  transition: all 0.15s;
+}
+.chip.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .app-header h1 { font-size: 15px; }
+  .app-main { padding: 10px; }
+  .tab-btn { font-size: 11px; padding: 8px 6px; }
+  .dupla-row { flex-direction: column; align-items: stretch; }
+  .dupla-label { min-width: unset; margin-bottom: 2px; }
+  .retencao-table table { font-size: 11px; }
+  .fab { width: 48px; height: 48px; font-size: 24px; bottom: 16px; right: 16px; }
+}
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  z-index: 300;
+  animation: fadeIn 0.2s;
+  box-shadow: var(--shadow-lg);
+}
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+
+/* ===== CHECKBOX FOR DAYS ===== */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+@media (max-width: 400px) {
+  .days-grid { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+// ===== CONFIG & CONSTANTS =====
+const AREAS_COLORS = ['var(--area-0)','var(--area-1)','var(--area-2)','var(--area-3)','var(--area-4)','var(--area-5)'];
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DIAS_SEMANA = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+const DIAS_KEYS = ['dom','seg','ter','qua','qui','sex','sab'];
+const HORARIOS = ['10:30','14:00','15:00','16:00','17:00','19:00','19:30','20:00','21:00'];
+const MARCOS_CONFIG = [
+  { group: 'Dentro de 1 mês', items: [
+    { key: 'entrevistaAcompanhamento', label: 'Entrevista de Acompanhamento' },
+    { key: 'sacerdocioAaronico', label: 'Sacerdócio Aarônico' },
+    { key: 'licao1', label: 'Lição 1' },
+    { key: 'licao2', label: 'Lição 2' },
+    { key: 'licao3', label: 'Lição 3' },
+    { key: 'licao4', label: 'Lição 4' },
+    { key: 'licao5', label: 'Lição 5' },
+  ]},
+  { group: 'Dentro de 6 meses', items: [
+    { key: 'chamado', label: 'Chamado Recebido' },
+    { key: 'frequencia', label: 'Frequência' },
+    { key: 'historiaFamiliar', label: 'História da Família' },
+    { key: 'sacerdocioMelquisedeque', label: 'Sacerdócio de Melquisedeque' },
+    { key: 'templo', label: 'Templo' },
+  ]},
+  { group: 'Quando preparado / 1 ano', items: [
+    { key: 'investidura', label: 'Investidura' },
+    { key: 'selamento', label: 'Selamento Familiar' },
+  ]},
+];
+const ALL_MARCOS_KEYS = MARCOS_CONFIG.flatMap(g => g.items.map(i => i.key));
+
+// ===== UTILITY FUNCTIONS =====
+function uuid() { return crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function $(sel, ctx) { return (ctx || document).querySelector(sel); }
+function $$(sel, ctx) { return [...(ctx || document).querySelectorAll(sel)]; }
+
+function escHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+async function hashPassword(pw) {
+  const enc = new TextEncoder().encode(pw);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function showToast(msg, type = '') {
+  const old = $('.toast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+function getWeekendDays(year, month) {
+  const days = [];
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dow = new Date(year, month, d).getDay();
+    if (dow === 0 || dow === 6) {
+      days.push({ day: d, dow, date: `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}` });
+    }
+  }
+  return days;
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+// ===== APP STATE =====
+const DEFAULT_STATE = {
+  version: 1,
+  adminHash: null,
+  areas: [
+    { id: 'queimados', nome: 'Queimados', ativo: true },
+    { id: 'jardins', nome: 'Queimados 2 - Jardins', ativo: true },
+    { id: 'engPedreira', nome: 'Eng. Pedreira', ativo: true },
+    { id: 'paracambi', nome: 'Paracambí', ativo: true },
+  ],
+  almoco: { voluntarios: [], calendario: {} },
+  disponibilidade: { membros: [] },
+  menosAtivos: {},
+  recemConversos: {},
+};
+
+const State = {
+  data: null,
+  load() {
+    try {
+      const raw = localStorage.getItem('isud_data');
+      if (raw) {
+        this.data = JSON.parse(raw);
+        this.migrate();
+      } else {
+        this.data = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      }
+    } catch {
+      this.data = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    }
+    // Ensure retention keys exist for all areas
+    this.data.areas.forEach(a => {
+      if (!this.data.menosAtivos[a.id]) this.data.menosAtivos[a.id] = [];
+      if (!this.data.recemConversos[a.id]) this.data.recemConversos[a.id] = [];
+    });
+  },
+  save() {
+    localStorage.setItem('isud_data', JSON.stringify(this.data));
+  },
+  migrate() {
+    // Future migrations go here based on this.data.version
+  },
+  getActiveAreas() {
+    return this.data.areas.filter(a => a.ativo);
+  },
+  getAreaColor(areaId) {
+    const idx = this.data.areas.findIndex(a => a.id === areaId);
+    return AREAS_COLORS[idx % AREAS_COLORS.length];
+  },
+  getAreaName(areaId) {
+    const a = this.data.areas.find(a => a.id === areaId);
+    return a ? a.nome : areaId;
+  }
+};
+
+// ===== ADMIN AUTH =====
+let isAdmin = sessionStorage.getItem('isud_admin') === 'true';
+
+async function requireAdmin() {
+  if (isAdmin) return true;
+  if (!State.data.adminHash) {
+    // First time: set password
+    return new Promise(resolve => {
+      showModal('Criar Senha Admin', `
+        <div class="form-group">
+          <label>Defina uma senha de administrador</label>
+          <input type="password" id="pw1" class="form-control" placeholder="Senha">
+        </div>
+        <div class="form-group">
+          <label>Confirme a senha</label>
+          <input type="password" id="pw2" class="form-control" placeholder="Confirmar">
+        </div>
+      `, async () => {
+        const p1 = $('#pw1').value, p2 = $('#pw2').value;
+        if (!p1 || p1.length < 3) { showToast('Senha deve ter ao menos 3 caracteres', 'error'); return false; }
+        if (p1 !== p2) { showToast('Senhas não conferem', 'error'); return false; }
+        State.data.adminHash = await hashPassword(p1);
+        State.save();
+        isAdmin = true;
+        sessionStorage.setItem('isud_admin', 'true');
+        updateAdminBtn();
+        showToast('Senha definida com sucesso!', 'success');
+        resolve(true);
+        return true;
+      }, () => resolve(false));
+    });
+  }
+  // Prompt for password
+  return new Promise(resolve => {
+    showModal('Autenticação', `
+      <div class="form-group">
+        <label>Senha de administrador</label>
+        <input type="password" id="pw-auth" class="form-control" placeholder="Senha" autofocus>
+      </div>
+    `, async () => {
+      const pw = $('#pw-auth').value;
+      const h = await hashPassword(pw);
+      if (h === State.data.adminHash) {
+        isAdmin = true;
+        sessionStorage.setItem('isud_admin', 'true');
+        updateAdminBtn();
+        showToast('Autenticado!', 'success');
+        resolve(true);
+        return true;
+      } else {
+        showToast('Senha incorreta', 'error');
+        return false;
+      }
+    }, () => resolve(false));
+  });
+}
+
+function lockAdmin() {
+  isAdmin = false;
+  sessionStorage.removeItem('isud_admin');
+  updateAdminBtn();
+  showToast('Sessão bloqueada');
+}
+
+function updateAdminBtn() {
+  const btn = $('#admin-btn');
+  if (btn) {
+    btn.textContent = isAdmin ? '🔓' : '🔒';
+    btn.title = isAdmin ? 'Bloquear' : 'Desbloquear';
+    btn.classList.toggle('active', isAdmin);
+  }
+}
+
+// ===== MODAL SYSTEM =====
+function showModal(title, bodyHtml, onConfirm, onCancel, confirmText = 'Salvar') {
+  closeModal();
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.innerHTML = `
+    <div class="modal">
+      <div class="modal-header">
+        <h3>${escHtml(title)}</h3>
+        <button class="modal-close" data-action="close">&times;</button>
+      </div>
+      <div class="modal-body">${bodyHtml}</div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" data-action="cancel">Cancelar</button>
+        <button class="btn btn-primary" data-action="confirm">${escHtml(confirmText)}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const close = () => { overlay.remove(); if (onCancel) onCancel(); };
+  overlay.querySelector('[data-action="close"]').onclick = close;
+  overlay.querySelector('[data-action="cancel"]').onclick = close;
+  overlay.querySelector('[data-action="confirm"]').onclick = async () => {
+    const result = await onConfirm();
+    if (result !== false) overlay.remove();
+  };
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+  // Focus first input
+  setTimeout(() => { const inp = overlay.querySelector('input, select, textarea'); if (inp) inp.focus(); }, 50);
+}
+
+function showConfirm(title, msg, onConfirm) {
+  showModal(title, `<p>${escHtml(msg)}</p>`, () => { onConfirm(); return true; }, null, 'Confirmar');
+}
+
+function closeModal() {
+  const m = $('.modal-overlay');
+  if (m) m.remove();
+}
+
+// ===== ROUTER =====
+let currentTab = 'almoco';
+let almocoSubView = 'calendario';
+
+const TABS = [
+  { id: 'almoco', label: 'Almoço', icon: '🍽️' },
+  { id: 'disponibilidade', label: 'Lições', icon: '📖' },
+  { id: 'menosAtivos', label: '- Ativos', icon: '🔄' },
+  { id: 'recemConversos', label: 'Conversos', icon: '✨' },
+];
+
+function navigate(tab) {
+  currentTab = tab;
+  render();
+}
+
+// ===== MAIN RENDER =====
+function render() {
+  const app = $('#app');
+  app.innerHTML = `
+    <header class="app-header">
+      <h1>iSUD - Apoio Missionário</h1>
+      <div class="header-actions">
+        <button class="header-btn" id="config-btn" title="Configurações" onclick="showConfig()">⚙️</button>
+        <button class="header-btn ${isAdmin ? 'active' : ''}" id="admin-btn" title="${isAdmin ? 'Bloquear' : 'Desbloquear'}" onclick="${isAdmin ? 'lockAdmin()' : 'requireAdmin().then(()=>render())'}">${isAdmin ? '🔓' : '🔒'}</button>
+      </div>
+    </header>
+    <nav class="tab-nav">
+      ${TABS.map(t => `<button class="tab-btn ${currentTab === t.id ? 'active' : ''}" onclick="navigate('${t.id}')">${t.icon} ${t.label}</button>`).join('')}
+    </nav>
+    <main class="app-main" id="main-content"></main>
+  `;
+  const main = $('#main-content');
+  switch(currentTab) {
+    case 'almoco': renderAlmoco(main); break;
+    case 'disponibilidade': renderDisponibilidade(main); break;
+    case 'menosAtivos': renderRetencao(main, 'menosAtivos', 'Menos Ativos'); break;
+    case 'recemConversos': renderRetencao(main, 'recemConversos', 'Recém-Conversos'); break;
+  }
+}
+
+// ===== MODULE: ALMOCO =====
+let almocoMonth = new Date().getMonth();
+let almocoYear = new Date().getFullYear();
+
+function renderAlmoco(container) {
+  const areas = State.getActiveAreas();
+  container.innerHTML = `
+    <div class="toolbar">
+      <div class="segmented">
+        <button class="${almocoSubView === 'calendario' ? 'active' : ''}" onclick="almocoSubView='calendario';render()">Calendário</button>
+        <button class="${almocoSubView === 'voluntarios' ? 'active' : ''}" onclick="almocoSubView='voluntarios';render()">Voluntários</button>
+      </div>
+    </div>
+    <div id="almoco-content"></div>
+  `;
+  const content = $('#almoco-content');
+  if (almocoSubView === 'calendario') {
+    renderCalendario(content, areas);
+  } else {
+    renderVoluntarios(content);
+  }
+}
+
+function renderCalendario(container, areas) {
+  const weekends = getWeekendDays(almocoYear, almocoMonth);
+  const cal = State.data.almoco.calendario;
+
+  container.innerHTML = `
+    <div class="month-nav">
+      <button onclick="prevMonth()">◀</button>
+      <h2>${MESES[almocoMonth]} ${almocoYear}</h2>
+      <button onclick="nextMonth()">▶</button>
+    </div>
+    ${weekends.length === 0 ? '<div class="empty-state"><p>Nenhum fim de semana neste mês</p></div>' : ''}
+    ${weekends.map(w => {
+      const dayName = w.dow === 0 ? 'Domingo' : 'Sábado';
+      const cssClass = w.dow === 0 ? 'domingo' : 'sabado';
+      const entry = cal[w.date] || {};
+      return `
+        <div class="weekend-card">
+          <div class="weekend-card-header ${cssClass}">${dayName}, ${w.day} de ${MESES[almocoMonth]}</div>
+          <div class="weekend-card-body">
+            ${areas.map(a => {
+              const val = entry[a.id] || '';
+              return `
+                <div class="dupla-row">
+                  <span class="dupla-label" style="background:${State.getAreaColor(a.id)}">${escHtml(a.nome)}</span>
+                  <select class="dupla-select" onchange="saveCalEntry('${w.date}','${a.id}',this.value)">
+                    <option value="">-- selecionar --</option>
+                    ${State.data.almoco.voluntarios.filter(v => v.ativo).map(v =>
+                      `<option value="${escHtml(v.nome)}" ${val === v.nome ? 'selected' : ''}>${escHtml(v.nome)}</option>`
+                    ).join('')}
+                    <option value="__outro" ${val && !State.data.almoco.voluntarios.find(v => v.nome === val && v.ativo) ? 'selected' : ''}>Outro...</option>
+                  </select>
+                  ${val && !State.data.almoco.voluntarios.find(v => v.nome === val && v.ativo) && val !== '__outro' ?
+                    `<input type="text" class="form-control" style="flex:1;max-width:140px" value="${escHtml(val)}" onchange="saveCalEntry('${w.date}','${a.id}',this.value)" placeholder="Nome">` : ''}
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }).join('')}
+  `;
+
+  // Handle "Outro..." selection showing text input
+  $$('.dupla-select', container).forEach(sel => {
+    sel.addEventListener('change', function() {
+      if (this.value === '__outro') {
+        const date = this.closest('.weekend-card-body') ? null : null; // handled by inline handler
+        // Re-render to show text input
+        render();
+      }
+    });
+  });
+}
+
+async function saveCalEntry(date, areaId, value) {
+  if (value === '__outro') {
+    // Show prompt for custom name
+    showModal('Nome personalizado', `
+      <div class="form-group">
+        <label>Nome da família/pessoa</label>
+        <input type="text" id="custom-name" class="form-control" placeholder="Ex: Família Silva">
+      </div>
+    `, () => {
+      const name = $('#custom-name').value.trim();
+      if (!name) { showToast('Digite um nome', 'error'); return false; }
+      if (!State.data.almoco.calendario[date]) State.data.almoco.calendario[date] = {};
+      State.data.almoco.calendario[date][areaId] = name;
+      State.save();
+      render();
+      return true;
+    });
+    return;
+  }
+  if (!State.data.almoco.calendario[date]) State.data.almoco.calendario[date] = {};
+  State.data.almoco.calendario[date][areaId] = value;
+  State.save();
+}
+
+function prevMonth() {
+  almocoMonth--;
+  if (almocoMonth < 0) { almocoMonth = 11; almocoYear--; }
+  render();
+}
+function nextMonth() {
+  almocoMonth++;
+  if (almocoMonth > 11) { almocoMonth = 0; almocoYear++; }
+  render();
+}
+
+// ===== VOLUNTARIOS =====
+function renderVoluntarios(container) {
+  const vols = State.data.almoco.voluntarios;
+  container.innerHTML = `
+    <div class="search-box">
+      <input type="text" id="vol-search" placeholder="Buscar voluntário..." oninput="filterVols()">
+    </div>
+    <div id="vol-list">
+      ${vols.length === 0 ? `
+        <div class="empty-state">
+          <div class="icon">🍽️</div>
+          <h3>Nenhum voluntário cadastrado</h3>
+          <p>Toque no botão + para adicionar famílias voluntárias</p>
+        </div>
+      ` : vols.map(v => `
+        <div class="vol-card" data-name="${escHtml(v.nome.toLowerCase())}">
+          <div class="vol-info">
+            <h4>${escHtml(v.nome)} ${!v.ativo ? '<span style="color:var(--text-secondary)">(Inativo)</span>' : ''}</h4>
+            <p>${escHtml(v.telefone || '')} ${v.endereco ? '· ' + escHtml(v.endereco) : ''}</p>
+            <div class="vol-tags">
+              ${v.diasDisponiveis.map(d => `<span class="tag active-tag">${DIAS_KEYS.indexOf(d) >= 0 ? DIAS_SEMANA[DIAS_KEYS.indexOf(d)] : d}</span>`).join('')}
+              <span class="tag">${v.capacidade} dupla${v.capacidade > 1 ? 's' : ''}</span>
+            </div>
+            ${v.observacoes ? `<p style="font-size:11px;margin-top:4px;color:var(--text-secondary)">${escHtml(v.observacoes)}</p>` : ''}
+          </div>
+          <button class="btn btn-sm btn-outline" onclick="editVoluntario('${v.id}')">Editar</button>
+        </div>
+      `).join('')}
+    </div>
+    <button class="fab" onclick="addVoluntario()">+</button>
+  `;
+}
+
+function filterVols() {
+  const q = ($('#vol-search')?.value || '').toLowerCase();
+  $$('.vol-card').forEach(c => {
+    c.style.display = c.dataset.name.includes(q) ? '' : 'none';
+  });
+}
+
+function voluntarioForm(vol) {
+  const v = vol || { id: '', nome: '', telefone: '', endereco: '', diasDisponiveis: [], capacidade: 1, observacoes: '', ativo: true };
+  return `
+    <div class="form-group">
+      <label>Nome da Família</label>
+      <input type="text" id="v-nome" class="form-control" value="${escHtml(v.nome)}" placeholder="Ex: Família Silva">
+    </div>
+    <div class="form-group">
+      <label>Telefone</label>
+      <input type="tel" id="v-tel" class="form-control" value="${escHtml(v.telefone)}" placeholder="(21) 99999-9999">
+    </div>
+    <div class="form-group">
+      <label>Endereço</label>
+      <input type="text" id="v-end" class="form-control" value="${escHtml(v.endereco)}" placeholder="Rua, número - bairro">
+    </div>
+    <div class="form-group">
+      <label>Dias Disponíveis</label>
+      <div class="days-grid">
+        ${DIAS_KEYS.map((d, i) => `
+          <label class="chip ${v.diasDisponiveis.includes(d) ? 'selected' : ''}" data-day="${d}">
+            <input type="checkbox" style="display:none" ${v.diasDisponiveis.includes(d) ? 'checked' : ''} onchange="this.parentElement.classList.toggle('selected')">
+            ${DIAS_SEMANA[i]}
+          </label>
+        `).join('')}
+        <label class="chip ${v.diasDisponiveis.includes('flex') ? 'selected' : ''}" data-day="flex">
+          <input type="checkbox" style="display:none" ${v.diasDisponiveis.includes('flex') ? 'checked' : ''} onchange="this.parentElement.classList.toggle('selected')">
+          Flex
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Capacidade (duplas)</label>
+      <select id="v-cap" class="form-control">
+        ${[1,2,3].map(n => `<option value="${n}" ${v.capacidade === n ? 'selected' : ''}>${n} dupla${n > 1 ? 's' : ''}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Observações</label>
+      <textarea id="v-obs" class="form-control" placeholder="Notas adicionais...">${escHtml(v.observacoes)}</textarea>
+    </div>
+    ${vol ? `
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="v-ativo" ${v.ativo ? 'checked' : ''}> Ativo
+        </label>
+      </div>
+    ` : ''}
+  `;
+}
+
+function getVoluntarioFormData(existingId) {
+  const nome = $('#v-nome').value.trim();
+  if (!nome) { showToast('Nome é obrigatório', 'error'); return null; }
+  const dias = $$('.days-grid .chip.selected').map(c => c.dataset.day);
+  return {
+    id: existingId || uuid(),
+    nome,
+    telefone: $('#v-tel').value.trim(),
+    endereco: $('#v-end').value.trim(),
+    diasDisponiveis: dias,
+    capacidade: parseInt($('#v-cap').value),
+    observacoes: $('#v-obs').value.trim(),
+    ativo: existingId ? ($('#v-ativo')?.checked ?? true) : true,
+  };
+}
+
+async function addVoluntario() {
+  if (!await requireAdmin()) return;
+  showModal('Novo Voluntário', voluntarioForm(), () => {
+    const v = getVoluntarioFormData();
+    if (!v) return false;
+    State.data.almoco.voluntarios.push(v);
+    State.save();
+    render();
+    showToast('Voluntário adicionado!', 'success');
+    return true;
+  });
+}
+
+async function editVoluntario(id) {
+  if (!await requireAdmin()) return;
+  const vol = State.data.almoco.voluntarios.find(v => v.id === id);
+  if (!vol) return;
+  showModal('Editar Voluntário', voluntarioForm(vol) + `
+    <hr style="margin:12px 0">
+    <button class="btn btn-danger btn-sm btn-block" onclick="deleteVoluntario('${id}')">Excluir Voluntário</button>
+  `, () => {
+    const v = getVoluntarioFormData(id);
+    if (!v) return false;
+    const idx = State.data.almoco.voluntarios.findIndex(x => x.id === id);
+    if (idx >= 0) State.data.almoco.voluntarios[idx] = v;
+    State.save();
+    render();
+    showToast('Voluntário atualizado!', 'success');
+    return true;
+  });
+}
+
+function deleteVoluntario(id) {
+  closeModal();
+  showConfirm('Excluir Voluntário', 'Tem certeza que deseja excluir este voluntário?', () => {
+    State.data.almoco.voluntarios = State.data.almoco.voluntarios.filter(v => v.id !== id);
+    State.save();
+    render();
+    showToast('Voluntário excluído');
+  });
+}
+
+// ===== MODULE: DISPONIBILIDADE =====
+let dispExpandedId = null;
+
+function renderDisponibilidade(container) {
+  const membros = State.data.disponibilidade.membros;
+  container.innerHTML = `
+    <div class="toolbar">
+      <div class="search-box" style="flex:1;margin-bottom:0">
+        <input type="text" id="disp-search" placeholder="Buscar membro..." oninput="filterDisp()">
+      </div>
+      <button class="btn btn-sm btn-accent" onclick="buscarDisponivel()">Buscar disponível</button>
+    </div>
+    <div id="disp-list">
+      ${membros.length === 0 ? `
+        <div class="empty-state">
+          <div class="icon">📖</div>
+          <h3>Nenhum membro cadastrado</h3>
+          <p>Toque no botão + para adicionar membros disponíveis para lições</p>
+        </div>
+      ` : membros.map(m => renderDispMember(m)).join('')}
+    </div>
+    <button class="fab" onclick="addMembro()">+</button>
+  `;
+}
+
+function renderDispMember(m) {
+  const expanded = dispExpandedId === m.id;
+  return `
+    <div class="avail-member-card" data-name="${escHtml(m.nome.toLowerCase())}">
+      <div class="avail-member-header" onclick="toggleDispMember('${m.id}')">
+        <h4>${escHtml(m.nome)}</h4>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:12px;color:var(--text-secondary)">${escHtml(m.telefone || '')}</span>
+          <button class="btn btn-sm btn-outline" onclick="event.stopPropagation();editMembro('${m.id}')">Editar</button>
+          <span>${expanded ? '▲' : '▼'}</span>
+        </div>
+      </div>
+      ${expanded ? `
+        <div class="avail-member-body">
+          <div class="avail-grid">
+            <table>
+              <thead>
+                <tr>
+                  <th>Horário</th>
+                  <th>Tipo</th>
+                  ${DIAS_SEMANA.map(d => `<th>${d}</th>`).join('')}
+                </tr>
+              </thead>
+              <tbody>
+                ${HORARIOS.map(h => `
+                  <tr>
+                    <td rowspan="2" style="font-weight:600;font-size:11px;background:var(--bg)">${h}</td>
+                    <td class="type-label" style="color:var(--primary)">Pres.</td>
+                    ${DIAS_KEYS.map(d => {
+                      const checked = (m.presencial[d] || []).includes(h);
+                      return `<td><input type="checkbox" class="cb" ${checked ? 'checked' : ''} onchange="toggleDisp('${m.id}','presencial','${d}','${h}',this.checked)"></td>`;
+                    }).join('')}
+                  </tr>
+                  <tr>
+                    <td class="type-label" style="color:var(--success)">Vídeo</td>
+                    ${DIAS_KEYS.map(d => {
+                      const checked = (m.videochamada[d] || []).includes(h);
+                      return `<td><input type="checkbox" class="cb" ${checked ? 'checked' : ''} onchange="toggleDisp('${m.id}','videochamada','${d}','${h}',this.checked)"></td>`;
+                    }).join('')}
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function toggleDispMember(id) {
+  dispExpandedId = dispExpandedId === id ? null : id;
+  render();
+}
+
+async function toggleDisp(membroId, tipo, dia, horario, checked) {
+  if (!isAdmin) {
+    if (!await requireAdmin()) { render(); return; }
+  }
+  const m = State.data.disponibilidade.membros.find(x => x.id === membroId);
+  if (!m) return;
+  if (!m[tipo][dia]) m[tipo][dia] = [];
+  if (checked) {
+    if (!m[tipo][dia].includes(horario)) m[tipo][dia].push(horario);
+  } else {
+    m[tipo][dia] = m[tipo][dia].filter(h => h !== horario);
+  }
+  State.save();
+}
+
+function filterDisp() {
+  const q = ($('#disp-search')?.value || '').toLowerCase();
+  $$('.avail-member-card').forEach(c => {
+    c.style.display = c.dataset.name.includes(q) ? '' : 'none';
+  });
+}
+
+function membroForm(m) {
+  const mb = m || { nome: '', telefone: '' };
+  return `
+    <div class="form-group">
+      <label>Nome</label>
+      <input type="text" id="m-nome" class="form-control" value="${escHtml(mb.nome)}" placeholder="Nome completo">
+    </div>
+    <div class="form-group">
+      <label>Telefone</label>
+      <input type="tel" id="m-tel" class="form-control" value="${escHtml(mb.telefone)}" placeholder="(21) 99999-9999">
+    </div>
+  `;
+}
+
+async function addMembro() {
+  if (!await requireAdmin()) return;
+  showModal('Novo Membro', membroForm(), () => {
+    const nome = $('#m-nome').value.trim();
+    if (!nome) { showToast('Nome é obrigatório', 'error'); return false; }
+    const pres = {}; const vid = {};
+    DIAS_KEYS.forEach(d => { pres[d] = []; vid[d] = []; });
+    State.data.disponibilidade.membros.push({
+      id: uuid(), nome, telefone: $('#m-tel').value.trim(),
+      presencial: pres, videochamada: vid,
+    });
+    State.save();
+    render();
+    showToast('Membro adicionado!', 'success');
+    return true;
+  });
+}
+
+async function editMembro(id) {
+  if (!await requireAdmin()) return;
+  const m = State.data.disponibilidade.membros.find(x => x.id === id);
+  if (!m) return;
+  showModal('Editar Membro', membroForm(m) + `
+    <hr style="margin:12px 0">
+    <button class="btn btn-danger btn-sm btn-block" onclick="deleteMembro('${id}')">Excluir Membro</button>
+  `, () => {
+    const nome = $('#m-nome').value.trim();
+    if (!nome) { showToast('Nome é obrigatório', 'error'); return false; }
+    m.nome = nome;
+    m.telefone = $('#m-tel').value.trim();
+    State.save();
+    render();
+    showToast('Membro atualizado!', 'success');
+    return true;
+  });
+}
+
+function deleteMembro(id) {
+  closeModal();
+  showConfirm('Excluir Membro', 'Tem certeza?', () => {
+    State.data.disponibilidade.membros = State.data.disponibilidade.membros.filter(m => m.id !== id);
+    State.save();
+    render();
+    showToast('Membro excluído');
+  });
+}
+
+function buscarDisponivel() {
+  showModal('Buscar Membro Disponível', `
+    <div class="form-group">
+      <label>Dia da Semana</label>
+      <select id="b-dia" class="form-control">
+        ${DIAS_KEYS.map((d, i) => `<option value="${d}">${DIAS_SEMANA[i]}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Horário</label>
+      <select id="b-hora" class="form-control">
+        ${HORARIOS.map(h => `<option value="${h}">${h}</option>`).join('')}
+      </select>
+    </div>
+    <div id="b-results" style="margin-top:12px"></div>
+  `, null, null, 'Fechar');
+
+  // Replace confirm with search action
+  const footer = $('.modal-footer');
+  footer.innerHTML = `
+    <button class="btn btn-primary" onclick="executeBusca()">Buscar</button>
+    <button class="btn btn-outline" onclick="closeModal()">Fechar</button>
+  `;
+}
+
+function executeBusca() {
+  const dia = $('#b-dia').value;
+  const hora = $('#b-hora').value;
+  const results = State.data.disponibilidade.membros.filter(m => {
+    const pres = (m.presencial[dia] || []).includes(hora);
+    const vid = (m.videochamada[dia] || []).includes(hora);
+    return pres || vid;
+  });
+  const res = $('#b-results');
+  if (results.length === 0) {
+    res.innerHTML = '<p style="color:var(--text-secondary);text-align:center">Nenhum membro disponível neste horário</p>';
+  } else {
+    res.innerHTML = results.map(m => {
+      const pres = (m.presencial[dia] || []).includes(hora);
+      const vid = (m.videochamada[dia] || []).includes(hora);
+      return `<div style="padding:8px;border-bottom:1px solid var(--border)">
+        <strong>${escHtml(m.nome)}</strong> ${m.telefone ? '· ' + escHtml(m.telefone) : ''}
+        <div style="margin-top:2px">
+          ${pres ? '<span class="tag active-tag">Presencial</span>' : ''}
+          ${vid ? '<span class="tag" style="background:#e8f5e9;color:var(--success)">Vídeo</span>' : ''}
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ===== MODULE: RETENCAO =====
+let retencaoArea = {};
+
+function renderRetencao(container, dataKey, title) {
+  const areas = State.getActiveAreas();
+  if (!retencaoArea[dataKey] && areas.length > 0) retencaoArea[dataKey] = areas[0].id;
+  const selectedArea = retencaoArea[dataKey];
+  const pessoas = (State.data[dataKey][selectedArea] || []);
+  const isConversos = dataKey === 'recemConversos';
+
+  container.innerHTML = `
+    <div class="toolbar">
+      <select onchange="retencaoArea['${dataKey}']=this.value;render()">
+        ${areas.map(a => `<option value="${a.id}" ${a.id === selectedArea ? 'selected' : ''}>${escHtml(a.nome)}</option>`).join('')}
+      </select>
+      <span style="font-size:13px;color:var(--text-secondary)">${pessoas.length} pessoa${pessoas.length !== 1 ? 's' : ''}</span>
+    </div>
+    <div id="retencao-content">
+      ${pessoas.length === 0 ? `
+        <div class="empty-state">
+          <div class="icon">${isConversos ? '✨' : '🔄'}</div>
+          <h3>Nenhuma pessoa cadastrada</h3>
+          <p>Toque no botão + para adicionar</p>
+        </div>
+      ` : renderRetencaoCards(pessoas, dataKey, isConversos)}
+    </div>
+    <button class="fab" onclick="addPessoaRetencao('${dataKey}')">+</button>
+  `;
+}
+
+function renderRetencaoCards(pessoas, dataKey, isConversos) {
+  return pessoas.map(p => {
+    const total = ALL_MARCOS_KEYS.length;
+    const done = ALL_MARCOS_KEYS.filter(k => p.marcos[k]).length;
+    const pct = Math.round((done / total) * 100);
+    return `
+      <div class="retencao-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <h4>${escHtml(p.nome)}</h4>
+            ${isConversos && p.dataBatismo ? `<p style="font-size:11px;color:var(--text-secondary)">Batismo: ${formatDate(p.dataBatismo)}</p>` : ''}
+          </div>
+          <button class="btn btn-sm btn-outline" onclick="editPessoaRetencao('${dataKey}','${p.id}')">Editar</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin:6px 0">
+          <div class="progress-bar" style="flex:1">
+            <div class="progress-bar-fill" style="width:${pct}%"></div>
+          </div>
+          <span style="font-size:11px;font-weight:600;color:${pct === 100 ? 'var(--success)' : 'var(--text-secondary)'}">${pct}%</span>
+        </div>
+        ${MARCOS_CONFIG.map(g => `
+          <div class="section-title">${g.group}</div>
+          ${g.items.map(item => {
+            const val = p.marcos[item.key];
+            return `
+              <div class="marco-item ${val ? 'done' : ''}">
+                <input type="checkbox" class="cb" ${val ? 'checked' : ''} onchange="toggleMarco('${dataKey}','${p.id}','${item.key}',this.checked)">
+                <span>${escHtml(item.label)}</span>
+                ${val ? `<span style="font-size:10px;color:var(--text-secondary);margin-left:auto">${formatDate(val)}</span>` : ''}
+              </div>
+            `;
+          }).join('')}
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+async function toggleMarco(dataKey, pessoaId, marcoKey, checked) {
+  if (!isAdmin) {
+    if (!await requireAdmin()) { render(); return; }
+  }
+  const area = retencaoArea[dataKey];
+  const p = (State.data[dataKey][area] || []).find(x => x.id === pessoaId);
+  if (!p) return;
+  if (checked) {
+    const today = new Date();
+    p.marcos[marcoKey] = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  } else {
+    p.marcos[marcoKey] = null;
+  }
+  State.save();
+  render();
+}
+
+function pessoaRetencaoForm(p, isConversos) {
+  const pessoa = p || { nome: '', dataBatismo: '' };
+  return `
+    <div class="form-group">
+      <label>Nome</label>
+      <input type="text" id="p-nome" class="form-control" value="${escHtml(pessoa.nome)}" placeholder="Nome completo">
+    </div>
+    ${isConversos ? `
+      <div class="form-group">
+        <label>Data do Batismo</label>
+        <input type="date" id="p-batismo" class="form-control" value="${pessoa.dataBatismo || ''}">
+      </div>
+    ` : ''}
+  `;
+}
+
+async function addPessoaRetencao(dataKey) {
+  if (!await requireAdmin()) return;
+  const area = retencaoArea[dataKey];
+  const isConversos = dataKey === 'recemConversos';
+  showModal('Nova Pessoa', pessoaRetencaoForm(null, isConversos), () => {
+    const nome = $('#p-nome').value.trim();
+    if (!nome) { showToast('Nome é obrigatório', 'error'); return false; }
+    const marcos = {};
+    ALL_MARCOS_KEYS.forEach(k => marcos[k] = null);
+    const pessoa = { id: uuid(), nome, marcos };
+    if (isConversos) pessoa.dataBatismo = $('#p-batismo')?.value || '';
+    if (!State.data[dataKey][area]) State.data[dataKey][area] = [];
+    State.data[dataKey][area].push(pessoa);
+    State.save();
+    render();
+    showToast('Pessoa adicionada!', 'success');
+    return true;
+  });
+}
+
+async function editPessoaRetencao(dataKey, pessoaId) {
+  if (!await requireAdmin()) return;
+  const area = retencaoArea[dataKey];
+  const isConversos = dataKey === 'recemConversos';
+  const p = (State.data[dataKey][area] || []).find(x => x.id === pessoaId);
+  if (!p) return;
+  showModal('Editar Pessoa', pessoaRetencaoForm(p, isConversos) + `
+    <hr style="margin:12px 0">
+    <button class="btn btn-danger btn-sm btn-block" onclick="deletePessoaRetencao('${dataKey}','${pessoaId}')">Excluir Pessoa</button>
+  `, () => {
+    const nome = $('#p-nome').value.trim();
+    if (!nome) { showToast('Nome é obrigatório', 'error'); return false; }
+    p.nome = nome;
+    if (isConversos) p.dataBatismo = $('#p-batismo')?.value || '';
+    State.save();
+    render();
+    showToast('Pessoa atualizada!', 'success');
+    return true;
+  });
+}
+
+function deletePessoaRetencao(dataKey, pessoaId) {
+  closeModal();
+  const area = retencaoArea[dataKey];
+  showConfirm('Excluir Pessoa', 'Tem certeza?', () => {
+    State.data[dataKey][area] = (State.data[dataKey][area] || []).filter(p => p.id !== pessoaId);
+    State.save();
+    render();
+    showToast('Pessoa excluída');
+  });
+}
+
+// ===== CONFIG =====
+function showConfig() {
+  const areas = State.data.areas;
+  showModal('Configurações', `
+    <h4 style="margin-bottom:12px">Áreas Geográficas</h4>
+    <div id="config-areas">
+      ${areas.map((a, i) => `
+        <div class="config-area-item">
+          <div class="config-area-color" style="background:${AREAS_COLORS[i % AREAS_COLORS.length]}"></div>
+          <span class="config-area-name">${escHtml(a.nome)}</span>
+          <span class="config-area-badge ${a.ativo ? 'ativa' : ''}">${a.ativo ? 'Ativa' : 'Inativa'}</span>
+          <button class="btn btn-sm btn-outline" onclick="editArea('${a.id}')">✏️</button>
+        </div>
+      `).join('')}
+    </div>
+    <button class="btn btn-sm btn-accent btn-block" style="margin-top:12px" onclick="addArea()">+ Nova Área</button>
+    <hr style="margin:16px 0">
+    <h4 style="margin-bottom:12px">Dados</h4>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-sm btn-outline" onclick="exportData()">📥 Exportar JSON</button>
+      <button class="btn btn-sm btn-outline" onclick="importData()">📤 Importar JSON</button>
+    </div>
+    ${State.data.adminHash ? `
+      <hr style="margin:16px 0">
+      <button class="btn btn-sm btn-danger" onclick="resetPassword()">Redefinir Senha</button>
+    ` : ''}
+  `, null, null, 'Fechar');
+  // Make it a close-only modal
+  const footer = $('.modal-footer');
+  footer.innerHTML = `<button class="btn btn-primary" onclick="closeModal()">Fechar</button>`;
+}
+
+async function addArea() {
+  closeModal();
+  if (!await requireAdmin()) { showConfig(); return; }
+  showModal('Nova Área', `
+    <div class="form-group">
+      <label>Nome da Área</label>
+      <input type="text" id="a-nome" class="form-control" placeholder="Ex: Nova Iguaçu">
+    </div>
+  `, () => {
+    const nome = $('#a-nome').value.trim();
+    if (!nome) { showToast('Nome é obrigatório', 'error'); return false; }
+    const id = nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_');
+    if (State.data.areas.find(a => a.id === id)) { showToast('Área já existe', 'error'); return false; }
+    State.data.areas.push({ id, nome, ativo: true });
+    State.data.menosAtivos[id] = [];
+    State.data.recemConversos[id] = [];
+    State.save();
+    showConfig();
+    showToast('Área adicionada!', 'success');
+    return true;
+  });
+}
+
+async function editArea(areaId) {
+  closeModal();
+  if (!await requireAdmin()) { showConfig(); return; }
+  const area = State.data.areas.find(a => a.id === areaId);
+  if (!area) return;
+  showModal('Editar Área', `
+    <div class="form-group">
+      <label>Nome</label>
+      <input type="text" id="ea-nome" class="form-control" value="${escHtml(area.nome)}">
+    </div>
+    <div class="form-group">
+      <label><input type="checkbox" id="ea-ativo" ${area.ativo ? 'checked' : ''}> Ativa</label>
+    </div>
+    <hr style="margin:12px 0">
+    <button class="btn btn-danger btn-sm btn-block" onclick="deleteArea('${areaId}')">Excluir Área</button>
+  `, () => {
+    const nome = $('#ea-nome').value.trim();
+    if (!nome) { showToast('Nome é obrigatório', 'error'); return false; }
+    area.nome = nome;
+    area.ativo = $('#ea-ativo').checked;
+    State.save();
+    showConfig();
+    showToast('Área atualizada!', 'success');
+    return true;
+  });
+}
+
+function deleteArea(areaId) {
+  closeModal();
+  showConfirm('Excluir Área', 'Todos os dados desta área serão perdidos. Continuar?', () => {
+    State.data.areas = State.data.areas.filter(a => a.id !== areaId);
+    delete State.data.menosAtivos[areaId];
+    delete State.data.recemConversos[areaId];
+    // Clean calendar entries for this area
+    Object.values(State.data.almoco.calendario).forEach(day => { delete day[areaId]; });
+    State.save();
+    showConfig();
+    showToast('Área excluída');
+  });
+}
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(State.data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `isud-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Dados exportados!', 'success');
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (!data.version || !data.areas) { showToast('Arquivo inválido', 'error'); return; }
+        State.data = data;
+        State.save();
+        render();
+        showToast('Dados importados com sucesso!', 'success');
+        closeModal();
+      } catch {
+        showToast('Erro ao ler arquivo', 'error');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+async function resetPassword() {
+  closeModal();
+  showModal('Redefinir Senha', `
+    <div class="form-group">
+      <label>Senha atual</label>
+      <input type="password" id="rp-old" class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Nova senha</label>
+      <input type="password" id="rp-new" class="form-control">
+    </div>
+    <div class="form-group">
+      <label>Confirmar nova senha</label>
+      <input type="password" id="rp-confirm" class="form-control">
+    </div>
+  `, async () => {
+    const oldH = await hashPassword($('#rp-old').value);
+    if (oldH !== State.data.adminHash) { showToast('Senha atual incorreta', 'error'); return false; }
+    const n1 = $('#rp-new').value, n2 = $('#rp-confirm').value;
+    if (!n1 || n1.length < 3) { showToast('Senha deve ter ao menos 3 caracteres', 'error'); return false; }
+    if (n1 !== n2) { showToast('Senhas não conferem', 'error'); return false; }
+    State.data.adminHash = await hashPassword(n1);
+    State.save();
+    showToast('Senha redefinida!', 'success');
+    showConfig();
+    return true;
+  });
+}
+
+// ===== SERVICE WORKER =====
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'isud-v1';
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))));
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).then(res => {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+        return res;
+      })).catch(() => caches.match('/')));
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  navigator.serviceWorker.register(URL.createObjectURL(blob), { scope: '/' }).catch(() => {});
+}
+
+// ===== INIT =====
+State.load();
+render();
+</script>
+</body>
+</html>
