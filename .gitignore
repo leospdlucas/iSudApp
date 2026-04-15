@@ -12,3 +12,6 @@ desktop.ini
 # Ignorar arquivos temporários
 *.tmp
 *.swp
+
+# Ignorar diretório do Claude Code (worktrees e configs locais)
+.claude/
