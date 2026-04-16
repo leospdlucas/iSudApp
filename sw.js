@@ -1,5 +1,5 @@
 // iSUD Service Worker - offline-first cache
-const CACHE = 'isud-v1';
+const CACHE = 'isud-v2';
 const ASSETS = [
   '/',
   '/index.html',
